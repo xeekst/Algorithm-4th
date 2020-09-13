@@ -95,6 +95,54 @@ namespace _1._1.Chapter
             else if (key > a[mid]) return Rank(key, a, mid + 1, hi, ++invokeHigh);
             else return mid;
         }
+        /// <summary>
+        /// 1.1.24 辗转相除法求最大公约数
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        static uint Gcd(uint a, uint b)
+        {
+            uint min = a;
+            uint max = b;
+            if (a > b)
+            {
+                min = b;
+                max = a;
+            }
+            else if (b > a)
+            {
+                max = b;
+                min = a;
+            }
+            else return a;
+
+            uint m = max % min;
+            if (m == 0) return min;
+            else return Gcd(min, m);
+        }
+        static int binomialCount = 0;
+        static Dictionary<string,double> binomialDict = new Dictionary<string,double>() ;
+        /// <summary>
+        /// 1.1.27 二项分布
+        /// </summary>
+        /// <param name="N"></param>
+        /// <param name="k"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        static double binomial(int N, int k, double p)
+        {
+            binomialCount++;
+            if (N == 0 && k == 0) return 1.0;
+            if (N < 0 || k < 0) return 0.0;
+            string key1 = $"{N-1}-{k}-{p}";
+            string key2 = $"{N-1}-{k-1}-{p}";
+            var r1 = binomialDict.ContainsKey(key1) ? binomialDict[key1] : binomial(N - 1, k, p);
+            var r2 = binomialDict.ContainsKey(key2) ? binomialDict[key2] : binomial(N - 1, k - 1, p);
+            binomialDict[key1] = r1;
+            binomialDict[key2] = r2;
+            return (1.0 - p) * r1 + p * r2;
+        }
         static void Main(string[] args)
         {
             _1_1_1();
@@ -115,6 +163,12 @@ namespace _1._1.Chapter
 
             Console.WriteLine("====================================");
             Console.WriteLine(Rank(567, Enumerable.Range(0, 100000).ToArray()));
+
+            Console.WriteLine("====================================");
+            Console.WriteLine($"Gcd:{Gcd(1234, 9124156)}");
+            Console.WriteLine("====================================");
+            Console.WriteLine($"binomial:{binomial(100, 50, 0.25)}");
+            Console.WriteLine($"invoke binomial count:{binomialCount++}");
             Console.WriteLine("end");
         }
         static void ShowArray<T>(T[][] array)
