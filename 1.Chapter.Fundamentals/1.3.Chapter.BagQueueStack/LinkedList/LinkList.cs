@@ -9,10 +9,7 @@ namespace LinkedList
 
         public int _count = 0;
         public Node<TData> Head => _head;
-        public LinkList()
-        {
-            _last = _head;
-        }
+        public LinkList() { }
 
         public int Count { get => _count; }
 
@@ -33,7 +30,7 @@ namespace LinkedList
                 _last = null;
                 return d;
             }
-            
+
             Node<TData> node = _head;
             while (node.Next.Next != null)
             {

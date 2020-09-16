@@ -6,11 +6,11 @@ namespace StackProgram
     /// 定容栈 —— 数组实现方式
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
-    public class StackImpl<TValue> : IStack<TValue>
+    public class ArrayStack<TValue> : IStack<TValue>
     {
         private TValue[] _stack;
         private int _insertIndex = 0;
-        public StackImpl(int size)
+        public ArrayStack(int size)
         {
             _stack = new TValue[size];
         }
@@ -45,6 +45,7 @@ namespace StackProgram
         private void Resize(int size)
         {
             if (size < _stack.Length) throw new ArgumentException();
+            Console.WriteLine("Resize");
             TValue[] newStack = new TValue[size];
             for (int i = 0; i < _stack.Length; i++)
             {
