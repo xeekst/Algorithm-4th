@@ -1,15 +1,15 @@
+using System.Collections;
+
 namespace LinkedList
 {
     public class LinkList<TData> : ILinkList<TData>
     {
         public Node<TData> _head;
         public Node<TData> _last;
-        public int _count = 0;
 
-        public LinkList()
-        {
-            _last = _head;
-        }
+        public int _count = 0;
+        public Node<TData> Head => _head;
+        public LinkList() { }
 
         public int Count { get => _count; }
 
@@ -30,12 +30,14 @@ namespace LinkedList
                 _last = null;
                 return d;
             }
+
             Node<TData> node = _head;
             while (node.Next.Next != null)
             {
-                node = _head.Next;
+                node = node.Next;
             }
             TData data = node.Next.Data;
+            node.Next = null;
             _last = node;
             return data;
         }
@@ -59,9 +61,9 @@ namespace LinkedList
             {
                 Data = data
             };
-            if (_last == null)
+            if (_head == null)
             {
-                _head.Next = next;
+                _head = next;
             }
             else
             {

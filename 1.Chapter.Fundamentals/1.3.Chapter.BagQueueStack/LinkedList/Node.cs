@@ -2,7 +2,7 @@ namespace LinkedList
 {
     public class Node<TData>
     {
-        public TData Data = null;
+        public TData Data = default(TData);
         public Node<TData> Next = null;
     }
 }
