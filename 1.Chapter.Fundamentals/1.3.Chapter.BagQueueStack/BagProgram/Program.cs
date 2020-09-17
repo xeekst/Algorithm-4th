@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace BagProgram
 {
@@ -6,7 +7,12 @@ namespace BagProgram
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            LinkedBag<string> bag = new LinkedBag<string>();
+            bag.Add("hi ");
+            bag.Add(" how");
+            bag.Add(" are");
+            bag.Add(" u?");
+            bag.ForEach(n => Console.WriteLine(n.data));
         }
     }
 }
