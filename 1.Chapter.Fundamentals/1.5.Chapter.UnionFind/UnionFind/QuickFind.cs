@@ -6,7 +6,7 @@ namespace UnionFind
     {
         private int[] _ids;
         private int _count;
-        public QuickUnion(int n)
+        public QuickFind(int n)
         {
             for (int i = 0; i < _ids.Length; i++)
             {
