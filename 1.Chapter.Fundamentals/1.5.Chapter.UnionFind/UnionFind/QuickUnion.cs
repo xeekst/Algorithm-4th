@@ -8,10 +8,12 @@ namespace UnionFind
         private int _count;
         public QuickUnion(int n)
         {
+            _ids = new int[n];
             for (int i = 0; i < _ids.Length; i++)
             {
                 _ids[i] = i;
             }
+            _count = n;
         }
         public int Find(int p)
         {
@@ -32,6 +34,11 @@ namespace UnionFind
             _ids[pRoot] = _ids[qRoot];
             _count--;
         }
+        public bool Connected(int p, int q)
+        {
+            return Find(p) == Find(q);
+        }
 
+        public int Count => _count;
     }
 }

@@ -16,6 +16,7 @@ namespace UnionFind
                 _ids[i] = i;
                 _sz[i] = 1;
             }
+            _count = n;
 
         }
         public int Find(int p)
@@ -55,5 +56,12 @@ namespace UnionFind
 
             _count--;
         }
+
+        public bool Connected(int p, int q)
+        {
+            return Find(p) == Find(q);
+        }
+
+        public int Count => _count;
     }
 }
