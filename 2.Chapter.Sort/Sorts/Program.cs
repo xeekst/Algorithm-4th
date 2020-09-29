@@ -7,24 +7,21 @@ namespace Sorts
     {
         static void Main(string[] args)
         {
-            Stopwatch sw = new Stopwatch();
-            int n = 3000;
-            BubbingSort bubbingSort = new BubbingSort();
-            var testArray1 = Utils.GenRandomArray(n);
-            sw.Start();
-            bubbingSort.Sort(testArray1);
-            sw.Stop();
-            bubbingSort.Show(testArray1);
-            Console.WriteLine($"===========BubbingSort:{sw.ElapsedMilliseconds}==========");
+            TestSort(new BubbingSort());
+            TestSort(new SelectSort());
+            TestSort(new InsertSort());
+        }
 
-            SelectSort selectSort = new SelectSort();
-            var testArray2 = Utils.GenRandomArray(n);
-            sw.Reset();
-            sw.Restart();
-            selectSort.Sort(testArray2);
+        private static void TestSort(SortAbstract sortor){
+            Stopwatch sw = new Stopwatch();
+            int n = 10000;
+            var testArray = Utils.GenRandomArray(n);
+            sw.Start();
+            sortor.Sort(testArray);
             sw.Stop();
-            selectSort.Show(testArray2);
-            Console.WriteLine($"===========Select Sort:{sw.ElapsedMilliseconds}==========");
+            //sortor.Show(testArray);
+            Console.WriteLine($"======================================{sortor.GetType().Name}:{sw.ElapsedMilliseconds}==================================");
+
         }
     }
 }
