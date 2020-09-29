@@ -14,7 +14,7 @@ namespace Sorts
 
         private static void TestSort(SortAbstract sortor){
             Stopwatch sw = new Stopwatch();
-            int n = 10000;
+            int n = 5000;
             var testArray = Utils.GenRandomArray(n);
             sw.Start();
             sortor.Sort(testArray);

@@ -8,14 +8,15 @@ namespace Sorts
         {
             for (int i = 1; i < a.Length; i++)
             {
-                //找到 恰好大于 i 的那个元素 j => [0,i)
-                for (int j = 0; j < i; j++)
+                //找到 恰好 j 小于 i 的那个元素 j => [0,i)
+                for (int j = i - 1; j >= -1; j--)
                 {
-                    if (Less(a[i], a[j]))
+                    if (j == -1 || Less(a[j], a[i]))
                     {
                         IComparable tmp = a[i];
-                        MoveNext(a, j, i - 1);
-                        a[j] = tmp;
+                        MoveNext(a, j + 1, i - 1);
+                        a[j + 1] = tmp;
+                        break;
                     }
                 }
             }
