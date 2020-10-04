@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using Ex_2._3._25;
 
-namespace Sorts
+namespace Ex_2._2._25
 {
     class Program
     {
@@ -16,10 +15,6 @@ namespace Sorts
             // TestSort(new BubbingSort());
             // TestSort(new SelectSort());
             // TestSort(new InsertSort());
-            TestSort(new MergeSort(), testArray);
-            // TestSort(new ShellSort());
-            TestSort(new QuickSort(), testArray);
-            TestSort(new QuickSort3Way(), testArray);
             TestSort(new QuickSortLittleArrayToInsertSort(),testArray);
         }
 

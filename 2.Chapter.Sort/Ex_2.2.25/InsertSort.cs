@@ -1,6 +1,6 @@
 using System;
 
-namespace Sorts
+namespace Ex_2._3._25
 {
     public class InsertSort : SortAbstract
     {
@@ -14,7 +14,7 @@ namespace Sorts
                 }
             }
         }
-        public void Sort(IComparable[] a, int lo, int hi)
+        public void Sort(IComparable[] a,int lo,int hi)
         {
             for (int i = 1 + lo; i < hi + 1; i++)
             {
