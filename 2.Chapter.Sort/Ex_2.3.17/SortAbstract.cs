@@ -1,6 +1,6 @@
 using System;
 
-namespace Sorts
+namespace Ex_2_3_17
 {
     public abstract class SortAbstract
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sorts
+namespace Ex_2_3_20
 {
     public class Utils
     {
