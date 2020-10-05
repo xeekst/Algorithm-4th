@@ -19,8 +19,9 @@ namespace Sorts
             TestSort(new MergeSort(), testArray);
             // TestSort(new ShellSort());
             TestSort(new QuickSort(), testArray);
-            TestSort(new QuickSort3Way(), testArray);
-            TestSort(new QuickSortLittleArrayToInsertSort(),testArray);
+            //TestSort(new QuickSort3Way(), testArray);
+            //TestSort(new QuickSortLittleArrayToInsertSort(),testArray);
+            TestSort(new HeapSort(), testArray);
         }
 
         private static void TestSort(SortAbstract sortor, IComparable[] a)
