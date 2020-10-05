@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Ex_2_3_27;
 
 namespace Ex_2._3._27
 {
