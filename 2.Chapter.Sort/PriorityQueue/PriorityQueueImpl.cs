@@ -48,7 +48,7 @@ namespace PriorityQueue
 
         private void Sink(int k)
         {
-            while (2 * k < _queue.Length)
+            while (2 * k <= Count)
             {
                 int maxChild = 2 * k;
                 //找到两个子节点 更大的那个节点
