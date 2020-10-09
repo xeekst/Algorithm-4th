@@ -19,8 +19,10 @@ namespace BST
 
             //bst.DeleteMin();
             bst.Delete("B");
+
             var list = bst.GetKeys("A","Z");
-            Console.WriteLine("Hello World!");
+            Console.WriteLine(bst.Select(3).Key);
+            Console.WriteLine(bst.Rank("F"));
         }
     }
 }

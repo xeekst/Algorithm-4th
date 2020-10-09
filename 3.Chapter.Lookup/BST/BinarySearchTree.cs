@@ -119,6 +119,51 @@ namespace BST
             return node;
         }
 
+        // 返回 key前面的元素数量
+        public int Rank(TKey key)
+        {
+            return Rank(_root, key);
+        }
+
+        private int Rank(TreeNode<TKey, TValue> node, TKey key)
+        {
+            if (node == null) return 0;
+            switch (key.CompareTo(node.Key))
+            {
+                case 1:
+                    return Count(node.Left) + 1 + Rank(node.Right, key);
+                case 0:
+                    return Count(node.Left);
+                case -1:
+                    return Rank(node.Left, key);
+            }
+            return 0;
+        }
+
+        // 返回前面为k个元素的元素 即 第 k+1 个元素
+        public TreeNode<TKey, TValue> Select(int k)
+        {
+            return Select(_root, k);
+        }
+
+        private TreeNode<TKey, TValue> Select(TreeNode<TKey, TValue> node, int k)
+        {
+            if (node == null) return null;
+            //左边的数量即它的排名 最初为排名0的node
+            int t = Count(node.Left);
+            switch (k.CompareTo(t))
+            {
+                case 1:
+                    //包含当前节点 所以+1
+                    return Select(node.Right, k - (t + 1));
+                case -1:
+                    return Select(node.Left, k);
+                case 0:
+                    return node;
+            }
+            return null;
+        }
+
         private int Count(TreeNode<TKey, TValue> node)
         {
             if (node == null) return 0;
