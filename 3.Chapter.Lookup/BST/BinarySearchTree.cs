@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace BST
 {
@@ -7,6 +8,7 @@ namespace BST
     {
         private TreeNode<TKey, TValue> _root;
 
+        public TreeNode<TKey,TValue> Root => _root;
         public TreeNode<TKey, TValue> GetMin(TreeNode<TKey, TValue> node)
         {
             if (node?.Left == null) return node;
@@ -119,10 +121,112 @@ namespace BST
             return node;
         }
 
+        // 返回 key前面的元素数量
+        public int Rank(TKey key)
+        {
+            return Rank(_root, key);
+        }
+
+        private int Rank(TreeNode<TKey, TValue> node, TKey key)
+        {
+            if (node == null) return 0;
+            switch (key.CompareTo(node.Key))
+            {
+                case 1:
+                    return Count(node.Left) + 1 + Rank(node.Right, key);
+                case 0:
+                    return Count(node.Left);
+                case -1:
+                    return Rank(node.Left, key);
+            }
+            return 0;
+        }
+
+        // 返回前面为k个元素的元素 即 第 k+1 个元素
+        public TreeNode<TKey, TValue> Select(int k)
+        {
+            return Select(_root, k);
+        }
+
+        private TreeNode<TKey, TValue> Select(TreeNode<TKey, TValue> node, int k)
+        {
+            if (node == null) return null;
+            //左边的数量即它的排名 最初为排名0的node
+            int t = Count(node.Left);
+            switch (k.CompareTo(t))
+            {
+                case 1:
+                    //包含当前节点 所以+1
+                    return Select(node.Right, k - (t + 1));
+                case -1:
+                    return Select(node.Left, k);
+                case 0:
+                    return node;
+            }
+            return null;
+        }
+
         private int Count(TreeNode<TKey, TValue> node)
         {
             if (node == null) return 0;
             else return node.Count;
+        }
+
+        public string Visualize()
+        {
+            TreeVisualizer vis = new TreeVisualizer();
+            Visualize(_root, vis);
+            return JsonConvert.SerializeObject(vis);
+        }
+        private void Visualize(TreeNode<TKey, TValue> node, TreeVisualizer vis)
+        {
+            if (node == null) return;
+            vis.nodes.Add(new TreeVisualizer.Node() { id = node.Key.ToString(), label = node.Key.ToString() });
+            if (node.Left != null)
+            {
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = node.Left.Key.ToString()
+                    //, label = "left" 
+                });
+            }
+            else
+            {
+                vis.nodes.Add(new TreeVisualizer.Node()
+                {
+                    id = $"{node.Key.ToString()}-left",
+                    label = $"null"
+                });
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = $"{node.Key.ToString()}-left"
+                    //, label = "left" 
+                });
+            }
+            if (node.Right != null)
+            {
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = node.Right.Key.ToString()
+                    //, label = "right" 
+                });
+            }
+            else
+            {
+                vis.nodes.Add(new TreeVisualizer.Node() { id = $"{node.Key.ToString()}-right", label = $"null" });
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = $"{node.Key.ToString()}-right"
+                    //, label = "right" 
+                });
+            }
+
+            Visualize(node.Left, vis);
+            Visualize(node.Right, vis);
         }
     }
 }
