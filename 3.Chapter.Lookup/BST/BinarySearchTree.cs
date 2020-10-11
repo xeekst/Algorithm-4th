@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace BST
 {
@@ -7,6 +8,7 @@ namespace BST
     {
         private TreeNode<TKey, TValue> _root;
 
+        public TreeNode<TKey,TValue> Root => _root;
         public TreeNode<TKey, TValue> GetMin(TreeNode<TKey, TValue> node)
         {
             if (node?.Left == null) return node;
@@ -168,6 +170,63 @@ namespace BST
         {
             if (node == null) return 0;
             else return node.Count;
+        }
+
+        public string Visualize()
+        {
+            TreeVisualizer vis = new TreeVisualizer();
+            Visualize(_root, vis);
+            return JsonConvert.SerializeObject(vis);
+        }
+        private void Visualize(TreeNode<TKey, TValue> node, TreeVisualizer vis)
+        {
+            if (node == null) return;
+            vis.nodes.Add(new TreeVisualizer.Node() { id = node.Key.ToString(), label = node.Key.ToString() });
+            if (node.Left != null)
+            {
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = node.Left.Key.ToString()
+                    //, label = "left" 
+                });
+            }
+            else
+            {
+                vis.nodes.Add(new TreeVisualizer.Node()
+                {
+                    id = $"{node.Key.ToString()}-left",
+                    label = $"null"
+                });
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = $"{node.Key.ToString()}-left"
+                    //, label = "left" 
+                });
+            }
+            if (node.Right != null)
+            {
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = node.Right.Key.ToString()
+                    //, label = "right" 
+                });
+            }
+            else
+            {
+                vis.nodes.Add(new TreeVisualizer.Node() { id = $"{node.Key.ToString()}-right", label = $"null" });
+                vis.edges.Add(new TreeVisualizer.Edge()
+                {
+                    from = node.Key.ToString(),
+                    to = $"{node.Key.ToString()}-right"
+                    //, label = "right" 
+                });
+            }
+
+            Visualize(node.Left, vis);
+            Visualize(node.Right, vis);
         }
     }
 }
