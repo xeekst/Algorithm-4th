@@ -59,11 +59,61 @@ namespace RedBlackBST
             return hNode;
         }
 
+        public void DeleteMin()
+        {
+            if (!IsRed(_root.Left) && !IsRed(_root.Right))
+            {
+                _root.Color = NodeColor.RED;
+            }
+            _root = DeleteMin(_root);
+            _root.Color = NodeColor.BLACK;
+        }
+
+        private TreeNode<TKey, TValue> DeleteMin(TreeNode<TKey, TValue> hNode)
+        {
+            if (hNode.Left == null) return null;
+            if (!IsRed(hNode.Left) && !IsRed(hNode.Left.Left))
+            {
+                hNode = MoveRedLeft(hNode);
+            }
+            hNode.Left = DeleteMin(hNode.Left);
+
+            if (IsRed(hNode.Right))
+            {
+                hNode = RotateLeft(hNode);
+            }
+
+            if (!IsRed(hNode.Left) && IsRed(hNode.Right)) hNode = RotateLeft(hNode);
+            if (IsRed(hNode.Left) && IsRed(hNode.Left?.Left)) hNode = RotateRight(hNode);
+            if (IsRed(hNode.Left) && IsRed(hNode.Right)) FilpColors(hNode);
+
+            hNode.N = Size(hNode.Left) + Size(hNode.Right) + 1;
+            return hNode;
+        }
+
+        private TreeNode<TKey, TValue> MoveRedLeft(TreeNode<TKey, TValue> h)
+        {
+            // h.Color = NodeColor.BLACK;
+            // h.Left.Color = NodeColor.RED;
+            ColorsFlip(h);
+            if (IsRed(h.Right.Left))
+            {
+                h.Right = RotateRight(h.Right);
+                h = RotateLeft(h);
+                //FilpColors(h);
+            }
+            // else{
+            //     h.Right.Color = NodeColor.RED;
+            // }
+            return h;
+        }
+
         private int Size(TreeNode<TKey, TValue> node)
         {
             if (node == null) return 0;
             else return node.N;
         }
+
         // 左旋操作
         private TreeNode<TKey, TValue> RotateLeft(TreeNode<TKey, TValue> hNode)
         {
@@ -99,6 +149,13 @@ namespace RedBlackBST
             node.Right.Color = NodeColor.BLACK;
         }
 
+        private void ColorsFlip(TreeNode<TKey, TValue> node)
+        {
+            node.Color = NodeColor.BLACK;
+            node.Left.Color = NodeColor.RED;
+            node.Right.Color = NodeColor.RED;
+        }
+
         private bool IsRed(TreeNode<TKey, TValue> node)
         {
             if (node == null) return false;
@@ -121,7 +178,9 @@ namespace RedBlackBST
                 {
                     from = node.Key.ToString(),
                     to = node.Left.Key.ToString()
-                    , label = "left" 
+                    ,
+                    label = node.Left.Color == NodeColor.RED ? "RED" : "BLACK"
+                    //,label = "left"
                 });
                 Visualize(node.Left, vis);
             }
@@ -136,7 +195,7 @@ namespace RedBlackBST
                 {
                     from = node.Key.ToString(),
                     to = $"{node.Key.ToString()}-left"
-                    , label = "left" 
+                    //,label = "left"
                 });
             }
             if (node.Right != null)
@@ -145,7 +204,9 @@ namespace RedBlackBST
                 {
                     from = node.Key.ToString(),
                     to = node.Right.Key.ToString()
-                    , label = "right" 
+                    ,
+                    label = node.Right.Color == NodeColor.RED ? "RED" : "BLACK"
+                    //,label = "right"
                 });
                 Visualize(node.Right, vis);
             }
@@ -156,12 +217,12 @@ namespace RedBlackBST
                 {
                     from = node.Key.ToString(),
                     to = $"{node.Key.ToString()}-right"
-                    , label = "right" 
+                    //,label = "right"
                 });
             }
 
-            
-            
+
+
         }
 
     }
