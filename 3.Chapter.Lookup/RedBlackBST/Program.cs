@@ -18,6 +18,9 @@ namespace RedBlackBST
             rbt.Put("M",1);
             rbt.Put("P",1);
             rbt.Put("L",1);
+            rbt.DeleteMin();
+            rbt.DeleteMin();
+            rbt.DeleteMin();
             Console.WriteLine("Hello World!");
         }
     }
