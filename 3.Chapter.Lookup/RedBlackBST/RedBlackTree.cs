@@ -3,7 +3,8 @@ using Newtonsoft.Json;
 
 namespace RedBlackBST
 {
-    public class RedBlackTree<TKey, TValue> where TKey : IComparable where TValue : IComparable
+    // 左倾红黑树实现
+    public class LLRedBlackTree<TKey, TValue> where TKey : IComparable where TValue : IComparable
     {
         private TreeNode<TKey, TValue> _root;
 
@@ -52,37 +53,131 @@ namespace RedBlackBST
                     break;
             }
             // 注意顺序：都是以h节点来操作
-            if (!IsRed(hNode.Left) && IsRed(hNode.Right)) hNode = RotateLeft(hNode);
-            if (IsRed(hNode.Left) && IsRed(hNode.Left?.Left)) hNode = RotateRight(hNode);
-            if (IsRed(hNode.Left) && IsRed(hNode.Right)) FilpColors(hNode);
-            hNode.N = 1 + Size(hNode.Left) + Size(hNode.Right);
-            return hNode;
+            return Balanced(hNode);
         }
 
-        public void DeleteMin()
+        public void Delete(TKey key)
+        {
+            if (!IsRed(_root.Right) && !IsRed(_root.Left))
+            {
+                _root.Color = NodeColor.RED;
+            }
+            _root = Delete(_root, key);
+            _root.Color = NodeColor.BLACK;
+        }
+
+        private TreeNode<TKey, TValue> Delete(TreeNode<TKey, TValue> hNode, TKey key)
+        {
+            if (key.CompareTo(hNode.Key) < 0)
+            {
+                if (!IsRed(hNode.Left) && !IsRed(hNode.Left.Left))
+                {
+                    hNode = MoveRedLeft(hNode);
+                }
+                hNode.Left = Delete(hNode.Left, key);
+            }
+            else
+            {
+                if (IsRed(hNode.Left))
+                {
+                    hNode = RotateRight(hNode);
+                }
+                if (key.CompareTo(hNode.Key) == 0 && hNode.Right == null)
+                {
+                    return null;
+                }
+                // 确定 hNode.right 不是红节点
+                if (!IsRed(hNode.Right) && !IsRed(hNode.Right.Left))
+                {
+                    hNode = MoveRedRight(hNode);
+                }
+                if (key.CompareTo(hNode.Key) == 0)
+                {
+                    hNode.Right  = DeleteMin(hNode.Right, out TreeNode<TKey, TValue> min);
+                    hNode.Key = min.Key;
+                    hNode.Value = min.Value;
+                }
+                else
+                {
+                    hNode.Right = Delete(hNode.Right, key);
+                }
+            }
+            if (IsRed(hNode.Right))
+            {
+                hNode = RotateLeft(hNode);
+            }
+            return Balanced(hNode);
+        }
+
+        public TreeNode<TKey, TValue> DeleteMin()
         {
             if (!IsRed(_root.Left) && !IsRed(_root.Right))
             {
                 _root.Color = NodeColor.RED;
             }
-            _root = DeleteMin(_root);
+
+            _root = DeleteMin(_root, out TreeNode<TKey, TValue> min);
             _root.Color = NodeColor.BLACK;
+            return min;
         }
 
-        private TreeNode<TKey, TValue> DeleteMin(TreeNode<TKey, TValue> hNode)
+        private TreeNode<TKey, TValue> DeleteMin(TreeNode<TKey, TValue> hNode, out TreeNode<TKey, TValue> minNode)
         {
-            if (hNode.Left == null) return null;
+            if (hNode.Left == null)
+            {
+                minNode = hNode;
+                return null;
+            }
             if (!IsRed(hNode.Left) && !IsRed(hNode.Left.Left))
             {
                 hNode = MoveRedLeft(hNode);
             }
-            hNode.Left = DeleteMin(hNode.Left);
+            hNode.Left = DeleteMin(hNode.Left, out minNode);
 
             if (IsRed(hNode.Right))
             {
                 hNode = RotateLeft(hNode);
             }
 
+            return Balanced(hNode);
+        }
+
+        public void DeleteMax()
+        {
+            if (!IsRed(_root.Left) && !IsRed(_root.Right))
+            {
+                _root.Color = NodeColor.RED;
+            }
+            _root = DeleteMax(_root);
+            _root.Color = NodeColor.BLACK;
+        }
+
+        private TreeNode<TKey, TValue> DeleteMax(TreeNode<TKey, TValue> hNode)
+        {
+            if (IsRed(hNode.Left))
+            {
+                hNode = RotateRight(hNode);
+            }
+            if (hNode.Right == null)
+            {
+                return null;
+            }
+            if (!IsRed(hNode.Right) && !IsRed(hNode.Right.Left))
+            {
+                hNode = MoveRedRight(hNode);
+            }
+            hNode.Right = DeleteMax(hNode.Right);
+
+            if (IsRed(hNode.Right))
+            {
+                hNode = RotateLeft(hNode);
+            }
+
+            return Balanced(hNode);
+        }
+
+        private TreeNode<TKey, TValue> Balanced(TreeNode<TKey, TValue> hNode)
+        {
             if (!IsRed(hNode.Left) && IsRed(hNode.Right)) hNode = RotateLeft(hNode);
             if (IsRed(hNode.Left) && IsRed(hNode.Left?.Left)) hNode = RotateRight(hNode);
             if (IsRed(hNode.Left) && IsRed(hNode.Right)) FilpColors(hNode);
@@ -90,7 +185,6 @@ namespace RedBlackBST
             hNode.N = Size(hNode.Left) + Size(hNode.Right) + 1;
             return hNode;
         }
-
         private TreeNode<TKey, TValue> MoveRedLeft(TreeNode<TKey, TValue> h)
         {
             // h.Color = NodeColor.BLACK;
@@ -108,6 +202,15 @@ namespace RedBlackBST
             return h;
         }
 
+        private TreeNode<TKey, TValue> MoveRedRight(TreeNode<TKey, TValue> h)
+        {
+            ColorsFlip(h);
+            if (!IsRed(h.Left.Left))
+            {
+                h = RotateRight(h);
+            }
+            return h;
+        }
         private int Size(TreeNode<TKey, TValue> node)
         {
             if (node == null) return 0;
