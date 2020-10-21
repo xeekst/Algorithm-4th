@@ -10,10 +10,9 @@ namespace SymbolTable
         private int HASH_SIZE = 10;
         private int _count = 0;
         private int MAX_ST_LEN = 400;
+        private ArrayST<TKey, TValue>[] _arraySTs;
 
         public int Count => _count;
-
-        private ArrayST<TKey, TValue>[] _arraySTs;
 
         public ZipperHashTableST(int M)
         {
