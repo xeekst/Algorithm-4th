@@ -4,7 +4,6 @@ namespace SymbolTable
 {
     public class ArrayST<TKey, TValue> : IST<TKey, TValue> where TKey : IComparable
     {
-
         private int _count;
         private Node<TKey, TValue>[] _array;
 
@@ -13,10 +12,23 @@ namespace SymbolTable
             _array = new Node<TKey, TValue>[N];
         }
 
-        public int Count { get => _count;}
+        public int Count { get => _count; }
+
+        public Node<TKey, TValue> this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException("index");
+                }
+                return _array[index];
+            }
+        }
 
         public void Put(TKey key, TValue value)
         {
+            if (Count == _array.Length) Resize(2 * _array.Length);
             var node = Get(key);
             if (node == null)
             {
@@ -79,6 +91,17 @@ namespace SymbolTable
             }
 
             return targetNode;
+        }
+
+        private void Resize(int N)
+        {
+            var oldArray = _array;
+            _array = new Node<TKey, TValue>[N];
+            for (int i = 0; i < oldArray.Length; i++)
+            {
+                _array[i] = oldArray[i];
+            }
+            oldArray = null;
         }
     }
 }
