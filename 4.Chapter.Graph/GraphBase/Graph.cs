@@ -8,6 +8,8 @@ namespace GraphBase
     {
         private int _vertices;
         private int _edges;
+        private IList<int> _dfsEdgeTos;
+        private IList<int> _bfsEdgeTos;
         private HashSet<int>[] _adjs;
 
         //V表示定点数量
@@ -44,9 +46,44 @@ namespace GraphBase
             return _adjs[v];
         }
 
+        public bool HasPathTo(int v)
+        {
+            return false;
+        }
+
+        //广度优先搜索
+        public void Bfs()
+        {
+            var marked = new bool[_vertices];
+            Bfs(this, 0, marked);
+        }
+
+        private void Bfs(Graph g, int s, bool[] marked)
+        {
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(s);
+            marked[s] = true;
+            while (queue.Count > 0)
+            {
+                var v = queue.Dequeue();
+                foreach (var w in g._adjs[v])
+                {
+                    if (!marked[w])
+                    {
+                        //保存最先到达的点
+                        _bfsEdgeTos[w] = v;
+                        marked[w] = true;
+                        queue.Enqueue(w);
+                    }
+                }
+            }
+        }
+                                                            
+        //深度优先搜索
         public void Dfs()
         {
             var marked = new bool[_vertices];
+            _dfsEdgeTos = new List<int>();
             int count = 0;
             Dfs(this, 0, marked, ref count);
         }
@@ -57,7 +94,11 @@ namespace GraphBase
             count++;
             foreach (int w in g._adjs[v])
             {
-                if (!marked[w]) Dfs(g, w, marked, ref count);
+                if (!marked[w])
+                {
+                    _dfsEdgeTos[w] = v;
+                    Dfs(g, w, marked, ref count);
+                }
             }
         }
 
