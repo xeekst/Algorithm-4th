@@ -13,7 +13,11 @@ namespace GraphBase
             _id = new int[g.V()];
             for (int s = 0; s < g.V(); s++)
             {
-
+                if (!_marked[s])
+                {
+                    Dfs(g, s);
+                    count++;
+                }
             }
         }
 

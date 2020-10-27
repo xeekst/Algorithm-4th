@@ -16,8 +16,12 @@ namespace GraphBase
             g.AddEdge(3,4);
             g.AddEdge(6,4);
             g.AddEdge(5,3);
+            
+            CC cc = new CC(g);
+            Console.WriteLine($"CC:{cc.Count()}");
 
-            Console.WriteLine("Hello World!");
+            Cycle cycle = new Cycle(g);
+            Console.WriteLine($"HasCycle:{cycle.HasCycle()}");
         }
     }
 }
