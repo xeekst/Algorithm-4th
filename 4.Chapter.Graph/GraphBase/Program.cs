@@ -22,6 +22,7 @@ namespace GraphBase
 
             Cycle cycle = new Cycle(g);
             Console.WriteLine($"HasCycle:{cycle.HasCycle()}");
+            g.DfsNoRecursion(g);
         }
     }
 }

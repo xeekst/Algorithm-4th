@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -98,6 +99,39 @@ namespace GraphBase
                 {
                     _dfsEdgeTos[w] = v;
                     Dfs(g, w, marked, ref count);
+                }
+            }
+        }
+
+        // 非递归深度优先遍历
+        public void DfsNoRecursion(Graph g)
+        {
+            var marked = new bool[g.V()];
+            var stack = new Stack<int>();
+            stack.Push(0);
+
+            Console.Write($"{stack.Peek()} ");
+            while (stack.Count > 0)
+            {
+                int s = stack.Peek();
+                marked[s] = true;
+                int index = 0;
+                foreach (int w in g.Adj(s))
+                {
+                    if (!marked[w])
+                    {
+                        stack.Push(w);
+
+                        Console.Write($"{stack.Peek()} ");
+                        break;
+                    }
+
+                    index++;
+                }
+
+                if (index == g.Adj(s).Count)
+                {
+                    stack.Pop();
                 }
             }
         }
