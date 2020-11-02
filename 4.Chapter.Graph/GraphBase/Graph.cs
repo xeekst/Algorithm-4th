@@ -135,7 +135,6 @@ namespace GraphBase
                 }
             }
         }
-
         public string Visualize()
         {
             GraphVisualizer vis = new GraphVisualizer();
