@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace DigraphBase
 {
+    //顶点遍历方式
     public class DepthFirstOrder
     {
         private bool[] marked;
