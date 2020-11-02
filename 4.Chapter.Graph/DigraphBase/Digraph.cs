@@ -41,6 +41,16 @@ namespace DigraphBase
             return d;
         }
 
+        public HashSet<int> Adj(int v)
+        {
+            return _adjs[v];
+        }
+
+        public int V()
+        {
+            return _vertices;
+        }
+
         public string Visualize()
         {
             DigraphVisualizer vis = new DigraphVisualizer();
