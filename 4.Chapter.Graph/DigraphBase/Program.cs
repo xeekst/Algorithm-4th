@@ -29,6 +29,9 @@ namespace DigraphBase
             {
                 Console.Write(s + " ");
             }
+
+            KosarajuSCC ks = new KosarajuSCC(g);
+            Console.WriteLine($"ks:{ks.Count()}");
         }
     }
 }
