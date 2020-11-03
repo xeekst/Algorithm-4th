@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DigraphBase
 {
+    //顶点遍历方式
     public class DepthFirstOrder
     {
         private bool[] marked;
         private Queue<int> preQueue;
         private Queue<int> postQueue;
         private Stack<int> reversePost;
+
+        public IEnumerable<int> Pre => preQueue.ToList();
+        public IEnumerable<int> Post => postQueue.ToList();
+        public IEnumerable<int> Reverse => reversePost.ToList();
 
         public DepthFirstOrder(Digraph dg)
         {
@@ -25,16 +31,19 @@ namespace DigraphBase
             }
         }
 
-        private void Dfs(Digraph digraph, int v)
+        private void Dfs(Digraph dg, int v)
         {
             preQueue.Enqueue(v);
-            foreach (int w in digraph.Adj(v))
+            marked[v] = true;
+
+            foreach (int w in dg.Adj(v))
             {
                 if (!marked[w])
                 {
-                    Dfs(digraph, v);
+                    Dfs(dg, w);
                 }
             }
+
             postQueue.Enqueue(v);
             reversePost.Push(v);
         }
