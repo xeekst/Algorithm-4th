@@ -25,13 +25,21 @@ namespace DigraphBase
 
             var topo = new Topological(g);
 
+            Console.WriteLine("Order: ");
             foreach (int s in topo.Order)
             {
                 Console.Write(s + " ");
             }
 
+            Console.WriteLine("\nReverOrder: ");
+            DepthFirstOrder order = new DepthFirstOrder(g.Reverse());
+            foreach (int s in order.Reverse)
+            {
+                Console.Write(s + " ");
+            }
+
             KosarajuSCC ks = new KosarajuSCC(g);
-            Console.WriteLine($"ks:{ks.Count()}");
+            Console.WriteLine($"\nks:{ks.Count()}");
         }
     }
 }
