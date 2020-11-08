@@ -22,12 +22,11 @@ namespace MinGrowTree
 
         public T DelMin()
         {
-            T maxNode = _queue[1];
+            T minNode = _queue[1];
             _queue[1] = _queue[_count];
-            _queue[_count] = default(T);
+            _queue[_count--] = default(T);
             Sink(1);
-            _count--;
-            return maxNode;
+            return minNode;
         }
 
         private void Swim(int k)
@@ -53,7 +52,8 @@ namespace MinGrowTree
                 int minChild = 2 * k;
                 //找到两个子节点 更小的那个节点
                 if (minChild + 1 <= _count && _queue[minChild].CompareTo(_queue[minChild + 1]) > 0) minChild++;
-                if (_queue[k].CompareTo(_queue[minChild]) < 0)
+
+                if (_queue[k].CompareTo(_queue[minChild]) > 0)
                 {
                     Swap(_queue, k, minChild);
                     k = minChild;

@@ -24,9 +24,8 @@ namespace PriorityQueue
         {
             T maxNode = _queue[1];
             _queue[1] = _queue[_count];
-            _queue[_count] = default(T);
+            _queue[_count--] = default(T);
             Sink(1);
-            _count--;
             return maxNode;
         }
 
