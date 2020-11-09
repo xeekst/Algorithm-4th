@@ -30,6 +30,13 @@ namespace MinGrowTree
             {
                 Console.Write($"{e} ");
             }
+
+            KruskalMST kmst = new KruskalMST(g);
+            Console.WriteLine("KruskalMST:");
+            foreach (Edge e in kmst.MST)
+            {
+                Console.Write($"{e} ");
+            }
         }
     }
 }

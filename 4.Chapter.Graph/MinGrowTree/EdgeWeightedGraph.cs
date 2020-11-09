@@ -42,5 +42,18 @@ namespace MinGrowTree
         {
             return _E;
         }
+
+        public HashSet<Edge> Edges()
+        {
+            HashSet<Edge> set = new HashSet<Edge>();
+            for (int v = 0; v < _V; v++)
+            {
+                foreach (var e in _adj[v])
+                {
+                    if (e.OtherVertex(v) > v) set.Add(e);
+                }
+            }
+            return set;
+        }
     }
 }
