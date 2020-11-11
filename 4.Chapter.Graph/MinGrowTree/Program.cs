@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MinGrowTree
 {
@@ -6,6 +8,19 @@ namespace MinGrowTree
     {
         static void Main(string[] args)
         {
+
+            // IndexMinPQ<int> imPQ = new IndexMinPQ<int>(10);
+            // var list = new List<int>() { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            // for (int i = 0; i < list.Count; i++)
+            // {
+            //     imPQ.Insert(i, list[i]);
+            // }
+            // foreach (int i in Enumerable.Range(1, 10))
+            // {
+            //     int k = imPQ.DelMin();
+            //     Console.WriteLine(k);
+            // }
+
             EdgeWeightedGraph g = new EdgeWeightedGraph(8);
             g.AddEdge(new Edge(0, 7, 16));
             g.AddEdge(new Edge(2, 3, 17));
@@ -25,15 +40,24 @@ namespace MinGrowTree
             g.AddEdge(new Edge(6, 4, 93));
 
             LazyPrimMST mst = new LazyPrimMST(g);
-
+            Console.WriteLine("LazyPrimMST:");
             foreach (Edge e in mst.Mst)
             {
                 Console.Write($"{e} ");
             }
+            Console.WriteLine();
 
             KruskalMST kmst = new KruskalMST(g);
             Console.WriteLine("KruskalMST:");
             foreach (Edge e in kmst.MST)
+            {
+                Console.Write($"{e} ");
+            }
+
+            Console.WriteLine();
+            PrimMST pmst = new PrimMST(g);
+            Console.WriteLine("PrimMST:");
+            foreach (Edge e in pmst.MST)
             {
                 Console.Write($"{e} ");
             }
