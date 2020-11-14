@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ShortestPath
 {
@@ -23,7 +24,27 @@ namespace ShortestPath
             g.AddEdge(new DirectedEdge(3, 6, 0.52));
             g.AddEdge(new DirectedEdge(6, 0, 0.58));
             g.AddEdge(new DirectedEdge(6, 4, 0.93));
-            
+
+            DijkstraSP dsp = new DijkstraSP(g, 0);
+            Console.WriteLine("DijkstraSP");
+            foreach (var e in dsp.PathTo(6))
+            {
+                Console.WriteLine($"{e} ");
+            }
+
+            var edges = new List<string>(){
+                "41 1 7 9",
+                "51 2",
+                "50",
+                "36",
+                "38",
+                "45",
+                "21 3 8",
+                "32 3 8",
+                "32 2",
+                "29 4 6"
+            };
+            var cpm = new CPM(10, edges);
             Console.WriteLine("Hello World!");
         }
     }

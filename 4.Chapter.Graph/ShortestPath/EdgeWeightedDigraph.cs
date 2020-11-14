@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ShortestPath
 {
@@ -45,6 +46,28 @@ namespace ShortestPath
                 }
             }
             return edges;
+        }
+
+        public string Visualize()
+        {
+            DigraphVisualizer vis = new DigraphVisualizer();
+            for (int i = 0; i < _adj.Length; i++)
+            {
+                var node = new DigraphVisualizer.Node();
+                node.label = i.ToString();
+                node.id = i.ToString();
+                vis.nodes.Add(node);
+                foreach (var ei in _adj[i])
+                {
+                    var e = new DigraphVisualizer.Edge()
+                    {
+                        from = i.ToString(),
+                        to = ei.To.ToString()
+                    };
+                    vis.edges.Add(e);
+                }
+            }
+            return JsonConvert.SerializeObject(vis);
         }
     }
 }
