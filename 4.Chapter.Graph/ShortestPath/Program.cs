@@ -45,6 +45,38 @@ namespace ShortestPath
                 "29 4 6"
             };
             var cpm = new CPM(10, edges);
+
+            var dedges = new List<string>(){
+                "4 5  0.35",
+                "5 4 -0.66",
+                "4 7  0.37",
+                "5 7  0.28",
+                "7 5  0.28",
+                "5 1  0.32",
+                "0 4  0.38",
+                "0 2  0.26",
+                "7 3  0.39",
+                "1 3  0.29",
+                "2 7  0.34",
+                "6 2  0.40",
+                "3 6  0.52",
+                "6 0  0.58",
+                "6 4  0.93"
+            };
+            int N = 8;
+            EdgeWeightedDigraph spt = new EdgeWeightedDigraph(N);
+            for (int i = 0; i < N; i++)
+            {
+                var e = dedges[i].Split(' ');
+                double duration = Convert.ToDouble(e[e.Length-1]);
+                int v = Convert.ToInt32(e[0]);
+                int w = Convert.ToInt32(e[1]);
+                spt.AddEdge(new DirectedEdge(v, w, duration));
+            }
+
+            BellmanFordSP bsp = new BellmanFordSP(spt,0);
+
+            Console.WriteLine(bsp.HasNegativeCycle());
             Console.WriteLine("Hello World!");
         }
     }
