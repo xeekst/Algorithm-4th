@@ -6,7 +6,11 @@ namespace StringsBase
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+            string[] a = new string[12] { "she", "bac", "abc", "src", "wuu", "bc", "fe", "ag", "agagag", "thyjhnf", "dsb", "s" };
+            Quick3string.Sort(a);
+
+            Console.WriteLine(string.Join(" ", a));
         }
     }
 }
