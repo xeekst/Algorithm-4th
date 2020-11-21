@@ -2,9 +2,8 @@ namespace StringsBase
 {
     public class MSD
     {
-        private static int R = 256;
+
         private static int M = 15;
-        private static string[] _aux;
         private static int CharAt(string s, int d)
         {
             if (d < s.Length)
@@ -17,13 +16,14 @@ namespace StringsBase
             }
         }
 
-        public static void Sort(string[] a)
+        public static void Sort(string[] a,int R)
         {
             int N = a.Length;
-            _aux = new string[N];
+            string[] aux = new string[N];
+            Sort(a, 0, a.Length - 1, 0, R, aux);
         }
 
-        private static void Sort(string[] a, int lo, int hi, int d)
+        private static void Sort(string[] a, int lo, int hi, int d, int R, string[] aux)
         {
             if (hi <= lo + M)
             {
@@ -45,17 +45,17 @@ namespace StringsBase
 
             for (int i = 0; i <= hi; i++)
             {
-                _aux[count[CharAt(a[i], d) + 1]++] = a[i];
+                aux[count[CharAt(a[i], d) + 1]++] = a[i];
             }
 
             for (int i = lo; i <= hi; i++)
             {
-                a[i] = _aux[i - lo];
+                a[i] = aux[i - lo];
             }
 
             for (int r = 0; r < R; r++)
             {
-                Sort(a, lo + count[r], lo + count[r + 1] - 1, d + 1);
+                Sort(a, lo + count[r], lo + count[r + 1] - 1, d + 1, R, aux);
             }
         }
     }
