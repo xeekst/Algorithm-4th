@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace StringsBase
+namespace StringsSort
 {
     class Program
     {
         static void Main(string[] args)
         {
-
             string[] a = new string[12] { "she", "bac", "abc", "src", "wuu", "bc", "fe", "ag", "agagag", "thyjhnf", "dsb", "s" };
             string[] a3 = "she sells seashells by the sea shore the shells she sells are surely seashells".Split(' ');
             Quick3string.Sort(a);

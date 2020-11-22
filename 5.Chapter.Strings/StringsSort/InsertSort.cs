@@ -1,6 +1,6 @@
 using System;
 
-namespace StringsBase
+namespace StringsSort
 {
     public class InsertSort
     {

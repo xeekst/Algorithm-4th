@@ -1,4 +1,4 @@
-namespace StringsBase
+namespace StringsSort
 {
     public class MSD
     {
