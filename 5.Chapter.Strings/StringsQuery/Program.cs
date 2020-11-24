@@ -12,7 +12,10 @@ namespace StringsQuery
             {
                 trieST.Put(a[i], i);
             }
+            
             Console.WriteLine(trieST.GetValue("sea"));
+
+            Console.WriteLine(KMP.Search("she sells seashells by the sea shore the shells she sells are surely seashells".Replace(" ",""),"are"));
         }
     }
 }
