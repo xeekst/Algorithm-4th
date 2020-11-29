@@ -132,6 +132,7 @@ namespace StringsQuery
         private void Collect(Node<T> x, string pre, string pat, IList<string> list)
         {
             int d = pre.Length;
+            if(x == null) return;
             if (d == pat.Length)
             {
                 if (x.value != null)
