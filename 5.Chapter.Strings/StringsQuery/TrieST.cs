@@ -78,9 +78,34 @@ namespace StringsQuery
             return null;
         }
 
-        public IList<string> KeysThatMach(string key)
+        //通配符.匹配
+        public IList<string> KeysThatMach(string pat)
         {
-            return null;
+            IList<string> list = new List<string>();
+            Collect(_root, "", pat, list);
+            return list;
+        }
+
+        private void Collect(Node<T> x, string pre, string pat, IList<string> list)
+        {
+            int d = pre.Length;
+            if (d == pat.Length)
+            {
+                if (x.value != null)
+                {
+                    list.Add(pre);
+                }
+                return;
+            }
+
+            char next = pat[d];
+            for (char c = (char)0; c < R; c++)
+            {
+                if (next == '.' || next == c)
+                {
+                    Collect(x.nexts[c], pre + c, pat, list);
+                }
+            }
         }
 
         public IList<string> KeysWithPrefix(string key)
