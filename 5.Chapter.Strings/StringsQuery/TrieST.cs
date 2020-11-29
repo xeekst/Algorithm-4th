@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace StringsQuery
 {
-
     public class TrieST<T> where T : IComparable
     {
         public class Node<TValue>
@@ -26,30 +25,30 @@ namespace StringsQuery
             R = r;
         }
 
-        public T GetValue(string key)
+        public T GetValue(string pat)
         {
-            Node<T> x = GetValue(_root, key, 0);
+            Node<T> x = GetValue(_root, pat, 0);
             return x == null ? default(T) : x.value;
         }
 
-        private Node<T> GetValue(Node<T> x, string key, int d)
+        private Node<T> GetValue(Node<T> x, string pat, int d)
         {
             if (x == null) return null;
-            if (d == key.Length) return x;
+            if (d == pat.Length) return x;
             //找到当前比较的char
-            char ch = key[d];
-            return GetValue(x.nexts[ch], key, d + 1);
+            char ch = pat[d];
+            return GetValue(x.nexts[ch], pat, d + 1);
         }
 
-        public void Put(string key, T val)
+        public void Put(string pat, T val)
         {
-            _root = Put(_root, key, val, 0);
+            _root = Put(_root, pat, val, 0);
         }
 
-        private Node<T> Put(Node<T> x, string key, T val, int d)
+        private Node<T> Put(Node<T> x, string pat, T val, int d)
         {
             if (x == null) x = new Node<T>();
-            if (d == key.Length)
+            if (d == pat.Length)
             {
                 if (x.value == null)
                 {
@@ -58,24 +57,68 @@ namespace StringsQuery
                 x.value = val;
                 return x;
             }
-            char ch = key[d];
-            x.nexts[ch] = Put(x.nexts[ch], key, val, d + 1);
+            char ch = pat[d];
+            x.nexts[ch] = Put(x.nexts[ch], pat, val, d + 1);
             return x;
         }
         // ToDo
-        public void Delete(string key)
+        public void Delete(string pat)
         {
-
+            _root = Delete(_root, pat, 0);
         }
 
-        public bool Contains(string key)
+        private Node<T> Delete(Node<T> x, string pat, int d)
         {
-            return false;
-        }
-
-        public string LongestPrefixOf(string key)
-        {
+            if (x == null) return null;
+            if (d == pat.Length) x.value = default(T);
+            else
+            {
+                char ch = pat[d];
+                x.nexts[ch] = Delete(x.nexts[ch], pat, d + 1);
+            }
+            if (x.value != null) return x;
+            // 找到下一个串，然后返回这一个 
+            for (char ch = (char)0; ch < R; ch++)
+            {
+                if (x.nexts[ch] != null) return x;
+            }
             return null;
+        }
+
+        public bool Contains(string pat)
+        {
+            return Contains(_root, pat, 0);
+        }
+
+        private bool Contains(Node<T> x, string pat, int d)
+        {
+            if (x == null) return false;
+            if (d == pat.Length)
+            {
+                if (x.value != null)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            return Contains(x.nexts[pat[d]], pat, d + 1);
+        }
+
+        //获取最长前缀
+        public string LongestPrefixOf(string pat)
+        {
+            int length = LongestPrefixOf(_root, pat, 0, 0);
+            return pat.Substring(0, length);
+        }
+
+        private int LongestPrefixOf(Node<T> x, string s, int d, int length)
+        {
+            if (x == null) return length;
+            if (x.value != null) length = d;
+            if (d == s.Length) return length;
+            char ch = s[d];
+            return LongestPrefixOf(x.nexts[ch], s, d + 1, length);
         }
 
         //通配符.匹配
@@ -108,9 +151,23 @@ namespace StringsQuery
             }
         }
 
-        public IList<string> KeysWithPrefix(string key)
+        public IList<string> KeysWithPrefix(string pat)
         {
-            return null;
+            var node = GetValue(_root, pat, 0);
+            IList<string> list = new List<string>();
+            KeysWithPrefix(_root, pat, list);
+            return list;
+        }
+
+        private void KeysWithPrefix(Node<T> x, string pre, IList<string> list)
+        {
+            if (x == null) return;
+            if (x.value != null) list.Add(pre);
+
+            for (char ch = (char)0; ch < R; ch++)
+            {
+                KeysWithPrefix(x.nexts[ch], pre + ch, list);
+            }
         }
     }
 }
