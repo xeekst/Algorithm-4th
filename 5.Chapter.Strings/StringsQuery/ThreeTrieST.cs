@@ -36,5 +36,37 @@ namespace StringsQuery
                     return x;
             }
         }
+
+        public void Put(string pat, TValue value)
+        {
+            if(string.IsNullOrEmpty(pat)) return;
+            _root = Put(_root, pat, 0, value);
+        }
+
+        private Node Put(Node x, string pat, int d, TValue value)
+        {
+            char ch = pat[d];
+            if (x == null) x = new Node() { Ch = ch };
+            switch (ch.CompareTo(x.Ch))
+            {
+                case 0:
+                    if (d == pat.Length - 1)
+                    {
+                        x.Value = value;
+                    }
+                    else
+                    {
+                        x.Mid = Put(x.Mid, pat, d + 1, value);
+                    }
+                    break;
+                case 1:
+                    x.Right = Put(x.Right, pat, d, value);
+                    break;
+                case -1:
+                    x.Left = Put(x.Left, pat, d, value);
+                    break;
+            }
+            return x;
+        }
     }
 }
