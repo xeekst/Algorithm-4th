@@ -19,6 +19,12 @@ namespace StringsQuery
             Console.WriteLine("GetValue:" + trieST.GetValue("sea"));
 
             Console.WriteLine(KMP.Search("she sells seashells by the sea shore the shells she sells are surely seashells".Replace(" ", ""), "are"));
+
+            BoyerMooreQuery boyerMoore = new BoyerMooreQuery("are");
+            Console.WriteLine(boyerMoore.Search("she sells seashells by the sea shore the shells she sells are surely seashells".Replace(" ", "")));
+
+            RabinKarp rk = new RabinKarp("are");
+            Console.WriteLine(rk.Search("she sells seashells by the sea shore the shells she sells are surely seashells".Replace(" ", "")));
         }
     }
 }
