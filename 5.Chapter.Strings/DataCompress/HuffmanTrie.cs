@@ -18,12 +18,22 @@ namespace DataCompress
                 freqs[chars[i]]++;
             }
             HuffmanNode root = BuildTrie(freqs);
-            // 构造编译表
+            // 构造编译表 每个字母 对应一个 code 字符串
             string[] st = new string[R];
             BuildCode(st, root, "");
-            
+
             MemoryStream m = new MemoryStream();
             BinaryWriter outWriter = new BinaryWriter(m);
+
+            // outWriter.Write(true);
+            // outWriter.Write(true);
+            // BinaryReader reader = new BinaryReader(m);
+            //m.Seek(0,SeekOrigin.Begin);
+            // var b1 = reader.ReadBoolean();
+            // var b2 = reader.ReadBoolean();
+            // var buff = new byte[2];
+            // m.Read(buff,0,2);
+
             WriteTrie(outWriter, root);
             Console.WriteLine(m.Length);
 
@@ -86,6 +96,15 @@ namespace DataCompress
             return pq.DelMin();
         }
 
+        // 先序读取构造一颗huffman树
+        private static HuffmanNode ReadTrie(BinaryReader reader)
+        {
+            if (reader.ReadBoolean())
+            {
+                return new HuffmanNode(reader.ReadChar(), 0, null, null);
+            }
+            return new HuffmanNode('\0', 0, ReadTrie(reader), ReadTrie(reader));
+        }
         private static void WriteTrie(BinaryWriter writer, HuffmanNode x)
         {
             if (x.isLeaf())
