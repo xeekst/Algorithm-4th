@@ -21,6 +21,7 @@ namespace DataCompress
             // 构造编译表
             string[] st = new string[R];
             BuildCode(st, root, "");
+            
             MemoryStream m = new MemoryStream();
             BinaryWriter outWriter = new BinaryWriter(m);
             WriteTrie(outWriter, root);
