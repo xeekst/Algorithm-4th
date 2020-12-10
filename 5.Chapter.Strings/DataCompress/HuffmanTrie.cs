@@ -4,6 +4,7 @@ using System.IO;
 
 namespace DataCompress
 {
+    // todo 改为更为通用的方式
     public class HuffmanTrie
     {
         private static int R = 256;
@@ -55,6 +56,30 @@ namespace DataCompress
 
         }
 
+        public static string Expand(BinaryReader reader)
+        {
+            HuffmanNode root = ReadTrie(reader);
+            int N = reader.ReadInt32();
+            char[] chars = new char[N];
+            for (int i = 0; i < N; i++)
+            {
+                HuffmanNode x = root;
+                while (!x.isLeaf())
+                {
+                    //一直往前读取
+                    if (reader.ReadBoolean())
+                    {
+                        x = x.Right;
+                    }
+                    else
+                    {
+                        x = x.Left;
+                    }
+                }
+                chars[i] = x.Ch;
+            }
+            return string.Join("", chars);
+        }
         private static string[] BuildCode(HuffmanNode root)
         {
             string[] st = new string[R];
