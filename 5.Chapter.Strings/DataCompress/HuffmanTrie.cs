@@ -11,7 +11,7 @@ namespace DataCompress
         private static int R = 256;
 
         // 返回bytes
-        public static byte[] Compress(string text)
+        public static BitArray Compress(string text)
         {
             char[] chars = text.ToCharArray();
             // 统计频次
@@ -25,25 +25,13 @@ namespace DataCompress
             string[] st = new string[R];
             BuildCode(st, root, "");
 
-            MemoryStream m = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(m);
-
-            // writer.Write(true);
-            // writer.Write(true);
-            // BinaryReader reader = new BinaryReader(m);
-            //m.Seek(0,SeekOrigin.Begin);
-            // var b1 = reader.ReadBoolean();
-            // var b2 = reader.ReadBoolean();
-            // var buff = new byte[2];
-            // m.Read(buff,0,2);
             List<bool> bits = new List<bool>();
             WriteTrie(bits, root);
-            BitArray array = new BitArray(new byte[] { Convert.ToByte(bits.Count) });
+            BitArray array = new BitArray(BitConverter.GetBytes(bits.Count));
             for (int i = 0; i < array.Length; i++)
             {
                 bits.Add(array[i]);
             }
-            //writer.Write(m.Length);
 
             for (int i = 0; i < text.Length; i++)
             {
@@ -60,11 +48,11 @@ namespace DataCompress
                     }
                 }
             }
-            writer.Flush();
-            var bytes = m.ToArray();
-            BitArray t = new BitArray(bits.ToArray());
 
-            return bytes;
+            //ToDo 补全成 bytes 数组 也就是 8的倍数，不够补0
+            BitArray tbits = new BitArray(bits.ToArray());
+
+            return tbits;
         }
 
         public static string Expand(BinaryReader reader)
@@ -149,6 +137,7 @@ namespace DataCompress
                 bits.AddRange(CharToBits(x.Ch));
                 return;
             }
+            bits.Add(false);
             WriteTrie(bits, x.Left);
             WriteTrie(bits, x.Right);
         }
@@ -156,13 +145,14 @@ namespace DataCompress
         private static bool[] CharToBits(char ch)
         {
             byte b = Convert.ToByte(ch);
-            var bits = new BitArray(new byte[] { b });
-            bool[] bools = new bool[8];
-            for (int i = 0; i < bits.Length; i++)
+            var bitArray = new BitArray(new byte[] { b });
+            bool[] bits = new bool[8];
+
+            for (int i = 7; i >= 0; i--)
             {
-                bools[i] = bits[i];
+                bits[7 - i] = bitArray[i];
             }
-            return bools;
+            return bits;
         }
 
     }
