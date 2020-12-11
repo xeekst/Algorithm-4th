@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,7 +10,8 @@ namespace DataCompress
     {
         private static int R = 256;
 
-        public static void Compress(string text)
+        // 返回bytes
+        public static byte[] Compress(string text)
         {
             char[] chars = text.ToCharArray();
             // 统计频次
@@ -24,19 +26,24 @@ namespace DataCompress
             BuildCode(st, root, "");
 
             MemoryStream m = new MemoryStream();
-            BinaryWriter outWriter = new BinaryWriter(m);
+            BinaryWriter writer = new BinaryWriter(m);
 
-            // outWriter.Write(true);
-            // outWriter.Write(true);
+            // writer.Write(true);
+            // writer.Write(true);
             // BinaryReader reader = new BinaryReader(m);
             //m.Seek(0,SeekOrigin.Begin);
             // var b1 = reader.ReadBoolean();
             // var b2 = reader.ReadBoolean();
             // var buff = new byte[2];
             // m.Read(buff,0,2);
-
-            WriteTrie(outWriter, root);
-            Console.WriteLine(m.Length);
+            List<bool> bits = new List<bool>();
+            WriteTrie(bits, root);
+            BitArray array = new BitArray(new byte[] { Convert.ToByte(bits.Count) });
+            for (int i = 0; i < array.Length; i++)
+            {
+                bits.Add(array[i]);
+            }
+            //writer.Write(m.Length);
 
             for (int i = 0; i < text.Length; i++)
             {
@@ -45,15 +52,19 @@ namespace DataCompress
                 {
                     if (code[j] == '1')
                     {
-                        outWriter.Write(true);
+                        bits.Add(true);
                     }
                     else
                     {
-                        outWriter.Write(false);
+                        bits.Add(false);
                     }
                 }
             }
+            writer.Flush();
+            var bytes = m.ToArray();
+            BitArray t = new BitArray(bits.ToArray());
 
+            return bytes;
         }
 
         public static string Expand(BinaryReader reader)
@@ -130,16 +141,29 @@ namespace DataCompress
             }
             return new HuffmanNode('\0', 0, ReadTrie(reader), ReadTrie(reader));
         }
-        private static void WriteTrie(BinaryWriter writer, HuffmanNode x)
+        private static void WriteTrie(List<bool> bits, HuffmanNode x)
         {
             if (x.isLeaf())
             {
-                writer.Write(true);
-                writer.Write(x.Ch);
+                bits.Add(true);
+                bits.AddRange(CharToBits(x.Ch));
                 return;
             }
-            WriteTrie(writer, x.Left);
-            WriteTrie(writer, x.Right);
+            WriteTrie(bits, x.Left);
+            WriteTrie(bits, x.Right);
         }
+
+        private static bool[] CharToBits(char ch)
+        {
+            byte b = Convert.ToByte(ch);
+            var bits = new BitArray(new byte[] { b });
+            bool[] bools = new bool[8];
+            for (int i = 0; i < bits.Length; i++)
+            {
+                bools[i] = bits[i];
+            }
+            return bools;
+        }
+
     }
 }

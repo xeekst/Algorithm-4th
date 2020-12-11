@@ -6,7 +6,7 @@ namespace DataCompress
     {
         static void Main(string[] args)
         {
-            HuffmanTrie.Compress("Hello World");
+            HuffmanTrie.Compress("ABRACADABRA!");
             Console.WriteLine("Hello World!");
         }
     }
