@@ -49,9 +49,12 @@ namespace DataCompress
                 }
             }
 
-            //ToDo 补全成 bytes 数组 也就是 8的倍数，不够补0
             BitArray tbits = new BitArray(bits.ToArray());
 
+            //与《算法-第四版》对应长度
+            byte[] bytes = new byte[Convert.ToInt32(Math.Ceiling(tbits.Length / 8.0))];
+            tbits.CopyTo(bytes, 0);
+            
             return tbits;
         }
 
