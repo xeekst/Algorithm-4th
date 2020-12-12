@@ -2,17 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DataCompress
 {
-    // todo 改为更为通用的方式
     public class HuffmanTrie
     {
         private static int R = 256;
 
         // 返回bytes
-        public static BitArray Compress(string text)
+        public static byte[] Compress(string text)
         {
+            BitVirtualSteam bvStream = new BitVirtualSteam();
             char[] chars = text.ToCharArray();
             // 统计频次
             int[] freqs = new int[R];
@@ -26,12 +27,15 @@ namespace DataCompress
             BuildCode(st, root, "");
 
             List<bool> bits = new List<bool>();
-            WriteTrie(bits, root);
-            BitArray array = new BitArray(BitConverter.GetBytes(bits.Count));
-            for (int i = 0; i < array.Length; i++)
-            {
-                bits.Add(array[i]);
-            }
+            WriteTrie(bvStream, root);
+            bvStream.Write(text.Length);
+            // var lenBytes = BitConverter.GetBytes(text.Length);
+            
+            // BitArray array = new BitArray(lenBytes);
+            // for (int i = 0; i < array.Length; i++)
+            // {
+            //     bits.Add(array[i]);
+            // }
 
             for (int i = 0; i < text.Length; i++)
             {
@@ -40,28 +44,33 @@ namespace DataCompress
                 {
                     if (code[j] == '1')
                     {
-                        bits.Add(true);
+                        bvStream.Write(true);
                     }
                     else
                     {
-                        bits.Add(false);
+                        bvStream.Write(false);
                     }
                 }
             }
 
-            BitArray tbits = new BitArray(bits.ToArray());
-
-            //与《算法-第四版》对应长度
-            byte[] bytes = new byte[Convert.ToInt32(Math.Ceiling(tbits.Length / 8.0))];
-            tbits.CopyTo(bytes, 0);
-            
-            return tbits;
+            return bvStream.GetBytes();
         }
 
-        public static string Expand(BinaryReader reader)
+        public static string Expand(byte[] bytes)
         {
-            HuffmanNode root = ReadTrie(reader);
-            int N = reader.ReadInt32();
+            int index = 0;
+            BitArray bits = new BitArray(bytes);
+            BitVirtualSteam bvStream = new BitVirtualSteam(bytes);
+            HuffmanNode root = ReadTrie(bvStream, ref index);
+            BitArray lenbs = new BitArray(32);
+            for (int i = 0; i < 32; i++)
+            {
+                lenbs[i] = bits[index++];
+            }
+            byte[] lenBytes = new byte[4];
+            lenbs.CopyTo(lenBytes,0);
+            //int N = BitConverter.ToInt32(lenBytes);
+            int N = bvStream.ReadInt32();
             char[] chars = new char[N];
             for (int i = 0; i < N; i++)
             {
@@ -69,7 +78,7 @@ namespace DataCompress
                 while (!x.isLeaf())
                 {
                     //一直往前读取
-                    if (reader.ReadBoolean())
+                    if (bvStream.ReadBoolean())
                     {
                         x = x.Right;
                     }
@@ -124,39 +133,26 @@ namespace DataCompress
         }
 
         // 先序读取构造一颗huffman树
-        private static HuffmanNode ReadTrie(BinaryReader reader)
+        private static HuffmanNode ReadTrie(BitVirtualSteam bvStream, ref int index)
         {
-            if (reader.ReadBoolean())
+            if (bvStream.ReadBoolean())
             {
-                return new HuffmanNode(reader.ReadChar(), 0, null, null);
+                //byte b = BitsToChar(bits, ref index);
+                return new HuffmanNode(bvStream.ReadChar(), 0, null, null);
             }
-            return new HuffmanNode('\0', 0, ReadTrie(reader), ReadTrie(reader));
+            return new HuffmanNode('\0', 0, ReadTrie(bvStream, ref index), ReadTrie(bvStream, ref index));
         }
-        private static void WriteTrie(List<bool> bits, HuffmanNode x)
+        private static void WriteTrie(BitVirtualSteam bvStream, HuffmanNode x)
         {
             if (x.isLeaf())
             {
-                bits.Add(true);
-                bits.AddRange(CharToBits(x.Ch));
+                bvStream.Write(true);
+                bvStream.Write(x.Ch);
                 return;
             }
-            bits.Add(false);
-            WriteTrie(bits, x.Left);
-            WriteTrie(bits, x.Right);
+            bvStream.Write(false);
+            WriteTrie(bvStream, x.Left);
+            WriteTrie(bvStream, x.Right);
         }
-
-        private static bool[] CharToBits(char ch)
-        {
-            byte b = Convert.ToByte(ch);
-            var bitArray = new BitArray(new byte[] { b });
-            bool[] bits = new bool[8];
-
-            for (int i = 7; i >= 0; i--)
-            {
-                bits[7 - i] = bitArray[i];
-            }
-            return bits;
-        }
-
     }
 }
