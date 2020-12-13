@@ -70,7 +70,7 @@ namespace DataCompress
             byte[] lenBytes = new byte[4];
             lenbs.CopyTo(lenBytes,0);
             //int N = BitConverter.ToInt32(lenBytes);
-            int N = bvStream.ReadInt32();
+            int N = bvStream.ReadInt();
             char[] chars = new char[N];
             for (int i = 0; i < N; i++)
             {
