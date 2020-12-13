@@ -47,14 +47,14 @@ namespace DataCompress
             return v;
         }
 
-        public int ReadInt32()
+        public int ReadInt(int w = 32)
         {
-            bool[] array = new bool[32];
-            _bits.CopyTo(_offset, array, 0, 32);
+            bool[] array = new bool[w];
+            _bits.CopyTo(_offset, array, 0, w);
             BitArray bitArray = new BitArray(array);
             byte[] bytes = new byte[4];
             bitArray.CopyTo(bytes, 0);
-            _offset += 32;
+            _offset += w;
             return BitConverter.ToInt32(bytes);
         }
 
@@ -79,11 +79,12 @@ namespace DataCompress
                 _bits.Add(array[i]);
             }
         }
-        public void Write(int value)
+        public void Write(int value, int w = 32)
         {
             byte[] bytes = BitConverter.GetBytes(value);
             BitArray array = new BitArray(bytes);
-            for (int i = 0; i < array.Count; i++)
+            int len = Math.Min(array.Count, w);
+            for (int i = 0; i < len; i++)
             {
                 _bits.Add(array[i]);
             }
