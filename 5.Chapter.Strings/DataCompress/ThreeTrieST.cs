@@ -1,4 +1,4 @@
-namespace StringsQuery
+namespace DataCompress
 {
     public class ThreeTrieST<TValue>
     {
