@@ -6,7 +6,9 @@ namespace Application
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            string text = "it was the best of times it was the worst of times";
+            Console.WriteLine(LRS.GetLongestSubString(text));
+            Console.WriteLine(KWIC.GetContexts(text,"was",2));
         }
     }
 }
