@@ -23,7 +23,17 @@ namespace Application
         {
             return _suffixes[i];
         }
-        public int Lcp(string s1, string s2)
+
+        // 获取当前的索引 总长度 减去 该后缀字符串长度
+        public int Index(int i)
+        {
+            return N - _suffixes[i].Length;
+        }
+        public int Lcp(int i)
+        {
+            return Lcp(_suffixes[i], _suffixes[i - 1]);
+        }
+        private int Lcp(string s1, string s2)
         {
             int N = Math.Min(s1.Length, s2.Length);
             for (int i = 0; i < N; i++)
