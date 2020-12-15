@@ -1,6 +1,6 @@
 using System;
 
-namespace Application
+namespace SuffixArray
 {
     public class LCP
     {

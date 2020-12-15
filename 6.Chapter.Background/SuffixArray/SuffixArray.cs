@@ -1,6 +1,6 @@
 using System;
 
-namespace Application
+namespace SuffixArray
 {
     //后缀数组
     public class SuffixArray
