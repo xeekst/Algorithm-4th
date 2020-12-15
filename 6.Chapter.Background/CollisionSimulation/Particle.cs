@@ -2,6 +2,7 @@ using System;
 
 namespace CollisionSimulation
 {
+    //ToDo 粒子实现
     public class Particle
     {
         private double _rx;
