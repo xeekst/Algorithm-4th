@@ -2,10 +2,12 @@ using System.Collections.Generic;
 
 namespace RegularExpression
 {
+    //NFA 是一个由 ε 转换构造的一个有向图（转换有两种：1. 字母表匹配转换 2.  ε 转换）
     public class NFA
     {
         private char[] _re;
         private Digraph G;
+        public Digraph Graph => G;
         private int M;
         public NFA(string regexp)
         {

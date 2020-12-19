@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DigraphBase
+namespace RegularExpression
 {
     public class DirectedDFS
     {
