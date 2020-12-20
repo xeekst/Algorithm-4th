@@ -48,5 +48,37 @@ namespace RegularExpression
                 }
             }
         }
+
+        public bool Recognizes(string text)
+        {
+            HashSet<int> pc = new HashSet<int>();
+            DirectedDFS dfs = new DirectedDFS(G, 0);
+            for (int v = 0; v < G.V(); v++)
+            {
+                if (dfs.Reachable(v)) pc.Add(v);
+            }
+            for (int i = 0; i < text.Length; i++)
+            {
+                HashSet<int> match = new HashSet<int>();
+                foreach (int v in pc)
+                {
+                    if (v < _re.Length)
+                    {
+                        if (_re[v] == text[i] || _re[v] == '.')
+                        {
+                            match.Add(v + 1);
+                        }
+                    }
+                }
+                pc = new HashSet<int>();
+                dfs = new DirectedDFS(G, match);
+                for (int v = 0; v < G.V(); v++)
+                {
+                    if (dfs.Reachable(v)) pc.Add(v);
+                }
+            }
+            foreach (int v in pc) if (v == _re.Length) return true;
+            return false;
+        }
     }
 }
